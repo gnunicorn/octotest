@@ -1,5 +1,25 @@
 module Jekyll
 
+  class BookshelfIndex
+
+    def initialize(site, url, content)
+      @site = site
+      @url = url
+      @content = content
+    end
+
+    def destination(dest)
+      File.join(dest, @url)
+    end
+
+    def write(dest)
+      target_file = destination(dest)
+      File.open(target_file, "w") do |f|
+        f.write(@content)
+      end
+    end
+  end
+
   class BookshelfItem 
     include Convertible
 
@@ -23,7 +43,18 @@ module Jekyll
     def url_base
     end
 
+    def destination(dest)
+      File.join(dest, @itemdata["url"])
+    end
+
     def post_process
+    end
+
+    def write(dest)
+      target_file = destination(dest)
+      File.open(target_file, "w") do |f|
+        f.write(@content)
+      end
     end
 
     def valid?
@@ -31,7 +62,6 @@ module Jekyll
     end
 
   end
-
 
   class BookItem < BookshelfItem
 
@@ -44,7 +74,6 @@ module Jekyll
     end
 
   end
-
 
   class VideoItem < BookshelfItem
 
@@ -73,11 +102,11 @@ module Jekyll
       [ ['books', @shelf.books], ['videos', @shelf.videos]].each do |dir, target|
         @itemdata["recommends"][dir].each do |key, rec| 
           if target[key] != nil then
-            target[key]["recommendations"] << {
+            target[key].itemdata["recommendations"] << {
                 "user" => self, "text" => rec
               }
             @itemdata["recommendations"][dir] << {
-                "item" => target[key], "text" => rec
+                "item" => target[key].itemdata, "text" => rec
               }
           end
         end
@@ -88,8 +117,6 @@ module Jekyll
       get_id and @itemdata['recommends'] != nil
     end
   end
-
-
 
   class Bookshelf
     @books = {}
@@ -117,7 +144,7 @@ module Jekyll
 
         entries.each do |f|
           entry = cls.new(site, self, books_dir, f)
-          target[entry.get_id] = entry.itemdata if entry.valid?
+          target[entry.get_id] = entry if entry.valid?
         end
       end
     end
@@ -139,16 +166,17 @@ module Jekyll
         Dir.mkdir(base) unless Dir.exists?(base)
 
         tmpl = self.load_template('database/' + dir + '.html', site)
-        target.each do |key, item|
-          File.open(File.join(site.dest, item["url"]), "w") do |f|
-            f.write(tmpl.render(dir=>item).gsub(/\t/, ''))
-          end
+        items = target.each do |key, item|
+          item.content = tmpl.render(dir=>item.itemdata).gsub(/\t/, '')
+          site.static_files << item
+          item.itemdata
         end
 
         tmpl = self.load_template('database/' + dir + '_index.html', site)
-        File.open(File.join(site.dest, dir + "s", "index.html"), "w") do |f|
-            f.write(tmpl.render(dir + 's'=>target).gsub(/\t/, ''))
-          end
+        site.static_files << BookshelfIndex.new(site,
+            dir + "s/index.html",
+            tmpl.render(dir + 's'=>items).gsub(/\t/, '')
+          )
       end
     end
 
@@ -175,5 +203,4 @@ module Jekyll
     end
 
   end
-
 end
