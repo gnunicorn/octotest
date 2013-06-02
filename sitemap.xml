@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
+    <url>
+        <loc>http://ligthyear.github.io/octotest/blog/archives/</loc>
+        <lastmod>2013-06-02T12:45:12+03:00</lastmod>
+    </url>
+    <url>
+        <loc>http://ligthyear.github.io/octotest/</loc>
+        <lastmod>2013-06-02T12:45:12+03:00</lastmod>
+    </url>
+    <url>
+        <loc>http://ligthyear.github.io/octotest/robots.txt</loc>
+        <lastmod>2013-06-02T12:45:12+03:00</lastmod>
+    </url>
+</urlset>
