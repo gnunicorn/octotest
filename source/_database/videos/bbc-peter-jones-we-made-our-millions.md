@@ -1,0 +1,10 @@
+---
+title: How we made our Millions
+author: Peter Jones for the BBC
+published_date: 2011
+source: youtube
+category: reportage
+tags: [inspiring, startup, entrepreneurship]
+youtube_id: foWMmY3xSuk
+---
+Peter Jones is on the quest to find out whether there is a formular for success. In ordert to find it he is talking to two of the most successful entrepreneurs of the U.K. and finds the roots of their drive in their childhood and deepest emotions and feelings about themselves and others.
